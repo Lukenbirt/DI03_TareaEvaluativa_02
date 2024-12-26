@@ -1,0 +1,7 @@
+{
+  "name": "DI03TareaEvaluativa",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
