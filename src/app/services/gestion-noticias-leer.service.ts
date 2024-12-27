@@ -9,7 +9,15 @@ export class GestionNoticiasLeerService {
 
   private leerNoticias : Article[] = [];
 
-  constructor(public gestionAlmacen: GestionStorageService) { }
+  constructor(public gestionAlmacen: GestionStorageService) { 
+    this.cargarNoticiasAlmacenadas();
+  }
+
+  // Carga los datos almacenados de forma persistente. Si no existen datos almacenados inicializa el array vacío
+  private async cargarNoticiasAlmacenadas() {
+    const noticiasAlmacenadas = await this.gestionAlmacen.getObject("articulos");
+    this.leerNoticias = noticiasAlmacenadas || [];
+  }
 
   // Devuelve todas las noticias para leer
   getNoticias() {

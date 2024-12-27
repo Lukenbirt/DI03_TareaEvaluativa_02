@@ -17,21 +17,7 @@ export class Tab1Page {
 
   // Añadimos HttpClient y el servicio en el constructor
   constructor(private restServer: HttpClient, public gestionNoticiasLeerService: GestionNoticiasLeerService, private gestionAlmacen: GestionStorageService) {
-    this.cargarNoticias();
-  }
-
-  // Método para cargar las noticias
-  private async cargarNoticias() {
-    // Intentamos cargar las noticias desde el almacenamiento local
-    const noticiasGuardadas = await this.gestionAlmacen.getObject("articulos");
-
-    if (noticiasGuardadas && noticiasGuardadas.length > 0) {
-      // Si existen noticias almacenadas, las asignamos a listaNoticias
-      this.listaNoticias = noticiasGuardadas;
-    } else {
-      // Si no hay noticias almacenadas, cargamos todas las noticias desde el servidor
-      this.leerArticulosServidor();
-    }
+    this.leerArticulosServidor();
   }
 
   // Carga las noticias desde el servidor REST
@@ -41,7 +27,6 @@ export class Tab1Page {
 
      // Nos suscribimos al observable y gestionamos los datos recibidos
      observableRest.subscribe((resp) => {
-      console.log("Noticias recibidas del servidor:", resp);
       this.listaNoticias.push(...resp.articles);
     });
   }

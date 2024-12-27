@@ -12,6 +12,13 @@ export class Tab2Page {
   // Creo e inicializo un array vacío
   listaNoticias: Article[] = [];
 
-  constructor(public gestionNoticiasLeer: GestionNoticiasLeerService) {}
+  constructor(public gestionNoticiasLeer: GestionNoticiasLeerService) {
+    this.cargarNoticias();
+  }
+
+  // Carga las noticias almacenadas
+  private async cargarNoticias() {
+    this.listaNoticias = await this.gestionNoticiasLeer.getNoticias();
+  }
 
 }
