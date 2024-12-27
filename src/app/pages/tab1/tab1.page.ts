@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { RespuestaNoticias, Article } from './../../interfaces/interfaces';
+import { GestionStorageService } from 'src/app/services/gestion-storage.service';
 
 @Component({
   selector: 'app-tab1',
@@ -15,11 +16,25 @@ export class Tab1Page {
   listaNoticias: Article[] = [];
 
   // Añadimos HttpClient y el servicio en el constructor
-  constructor(private restServer: HttpClient, public gestionNoticiasLeerService: GestionNoticiasLeerService) {
-    this.leerArticulosServidor();
+  constructor(private restServer: HttpClient, public gestionNoticiasLeerService: GestionNoticiasLeerService, private gestionAlmacen: GestionStorageService) {
+    this.cargarNoticias();
   }
 
-  //
+  // Método para cargar las noticias
+  private async cargarNoticias() {
+    // Intentamos cargar las noticias desde el almacenamiento local
+    const noticiasGuardadas = await this.gestionAlmacen.getObject("articulos");
+
+    if (noticiasGuardadas && noticiasGuardadas.length > 0) {
+      // Si existen noticias almacenadas, las asignamos a listaNoticias
+      this.listaNoticias = noticiasGuardadas;
+    } else {
+      // Si no hay noticias almacenadas, cargamos todas las noticias desde el servidor
+      this.leerArticulosServidor();
+    }
+  }
+
+  // Carga las noticias desde el servidor REST
   private leerArticulosServidor() {
     // Declaramos el observable y lo inicializamos con una consulta GET al servidor REST
     let observableRest: Observable<RespuestaNoticias> = this.restServer.get<RespuestaNoticias>("https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=e4a36b71b78444d28aacbf5879dd7b4b");
