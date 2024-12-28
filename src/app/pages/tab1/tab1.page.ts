@@ -14,6 +14,8 @@ export class Tab1Page {
 
   // Declaramos y creamos el array de noticias vacío
   listaNoticias: Article[] = [];
+  // Declaramos una variable para la categoria
+  categoria: string = "general";
 
   // Añadimos HttpClient y el servicio en el constructor
   constructor(private restServer: HttpClient, public gestionNoticiasLeerService: GestionNoticiasLeerService, private gestionAlmacen: GestionStorageService) {
@@ -22,23 +24,32 @@ export class Tab1Page {
 
   // Carga las noticias desde el servidor REST
   private leerArticulosServidor() {
+    // Vacía el array de noticias antes de cargar las nuevas
+    this.listaNoticias = [];
     // Definimos la categoria que queremos
-    let busqueda: string = this.getCategory("general");
+    let busqueda: string = this.getCategory(this.categoria);
     // Declaramos el observable y lo inicializamos con una consulta GET al servidor REST
     let observableRest: Observable<RespuestaNoticias> = this.restServer.get<RespuestaNoticias>(busqueda);
-
-     // Nos suscribimos al observable y gestionamos los datos recibidos
-     observableRest.subscribe((resp) => {
+    // Nos suscribimos al observable y gestionamos los datos recibidos
+    observableRest.subscribe((resp) => {
       this.listaNoticias.push(...resp.articles);
     });
   }
 
-  // Devuelve la busqueda REST con la categoría a buscar
+  // Devuelve la consulta REST con la categoría a buscar
   public getCategory(categoria: string): string {
     let cadena: string = "https://newsapi.org/v2/top-headlines?country=us&category=" + categoria + "&apiKey=e4a36b71b78444d28aacbf5879dd7b4b"
     return cadena;
   }
   
+  // Cambia la categoria al seleccionar un ion segment
+  cambiarCategoria(evento: any) {
+    // Actualiza la categoría seleccionada
+    this.categoria = evento.detail.value;
+    // Recarga las noticias de la nueva categoría
+    this.leerArticulosServidor();
+  }
+
   // Comprueba si la noticia seleccionada (checked) está para leer o no
   seleccionado(item: Article): boolean {
     let indice: number = this.gestionNoticiasLeerService.buscarNoticia(item);
@@ -57,4 +68,5 @@ export class Tab1Page {
       this.gestionNoticiasLeerService.borrarNoticia(item);
     }    
   }
+
 }
