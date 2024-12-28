@@ -22,13 +22,21 @@ export class Tab1Page {
 
   // Carga las noticias desde el servidor REST
   private leerArticulosServidor() {
+    // Definimos la categoria que queremos
+    let busqueda: string = this.getCategory("general");
     // Declaramos el observable y lo inicializamos con una consulta GET al servidor REST
-    let observableRest: Observable<RespuestaNoticias> = this.restServer.get<RespuestaNoticias>("https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=e4a36b71b78444d28aacbf5879dd7b4b");
+    let observableRest: Observable<RespuestaNoticias> = this.restServer.get<RespuestaNoticias>(busqueda);
 
      // Nos suscribimos al observable y gestionamos los datos recibidos
      observableRest.subscribe((resp) => {
       this.listaNoticias.push(...resp.articles);
     });
+  }
+
+  // Devuelve la busqueda REST con la categoría a buscar
+  public getCategory(categoria: string): string {
+    let cadena: string = "https://newsapi.org/v2/top-headlines?country=us&category=" + categoria + "&apiKey=e4a36b71b78444d28aacbf5879dd7b4b"
+    return cadena;
   }
   
   // Comprueba si la noticia seleccionada (checked) está para leer o no

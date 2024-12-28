@@ -2,11 +2,36 @@
   <ion-toolbar>
     <ion-title>
       Mis Noticias
-    </ion-title>
+    </ion-title>  
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ion-toolbar>
+    <ion-segment [scrollable]="true" value="general">
+      <ion-segment-button value="general">
+        <ion-label>General</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="business">
+        <ion-label>Business</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="technology">
+        <ion-label>Technology</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="science">
+        <ion-label>Science</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="entertainment">
+        <ion-label>Entertainment</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="health">
+        <ion-label>Health</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="sports">
+        <ion-label>Sports</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
   <ion-list *ngFor="let noticia of listaNoticias">
     <ion-item>
       <ion-checkbox color="primary" slot="start" [checked]="seleccionado(noticia)" (ionChange)="checkNoticia($event, noticia)"></ion-checkbox>
